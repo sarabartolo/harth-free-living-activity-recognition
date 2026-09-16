@@ -1,7 +1,7 @@
 # Machine_Learning_Portfolio_Project
 ###### Include
-Title
-Description of technology/process and why
+- Title
+- Description of technology/process and why
 Table of Contents
 Details about how project came about
 Motivation
