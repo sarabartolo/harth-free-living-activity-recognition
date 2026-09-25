@@ -1,11 +1,14 @@
 # Machine_Learning_Portfolio_Project
 ###### Include
-- Title
-- Description of technology/process and why
-- Table of Contents
+- **Project Question** (& Title) - Describes what problem it intends to solve
+- **Motivation**
+- **Dataset**
+- **Folder Structure**
+- **Setup**
+- **Limitations**
+- **Intended use**
+- **References**
+- Description of process and why
 - Details about how project came about
-- Motivation
-- Limitations/Challenges
-- What problem it intends to solve
-- What its intended use is
-- credits/references
+
+
