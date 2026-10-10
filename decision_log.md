@@ -19,7 +19,7 @@
 - Which subjects should go in test set and which in the training set? need to make sure that each activity i include is well represented in both sets
 -Need to handle sampling rate issue - probably just resample S006 to 50Hz to match the other subjects
 
-## 2026-10-02
+## 02-10-2026
 
 #### Decisions (made while writing the proposal)
 - Classes: reduced from 12 to 8 (sitting, walking, standing, lying, running, shuffling, stairs, cycling).
@@ -39,3 +39,25 @@
 - Which subjects go in the test set, making sure each class is represented in both training and test sets.
 - How to handle windows that span a timestamp gap or contain two activities (drop them, or label them by the majority activity?).
 - Whether to add a gravity/movement feature (thigh tilt) from the paper's approach
+
+## 10-10-2026 - Completed data inspection
+#### Findings & Decisions
+- Sensors were set to ± 8g (Logacjov et al., 2021, page 6)
+- 188 cells hit the limit, all during walking and running, mostly in S027 and S029. Since the limit was hit during high-impact activities and in very few instances I kept all the data. Note: S029 reached the sensor limits most during walking which is unusual
+- Most gaps in the time series were more than 1 seconds so I need to account for them when creating the windows
+
+## 2026-10-10 - Started data preprocessing (on one participant)
+#### Notes
+- Kept the timestamp, sensor, and label columns, dropped index/unnamed column, and added subject column
+- Addeded activity column, mapping labels to their activity. I merged 'stairs (ascending/descending)' into 'stairs' and 'cycling (sit/stand)' into 'cylcing'. I also dropped inactive cycling labels
+- Created blocks, where a new block started after a gap (a gap is any time between two rows longer than the median time of the participant)
+- Created 1-second non-overlapping windows (50 rows) 
+- Dropped window < 1s and containing more than 1 activity
+- Computed vector magnitude of the 2 sensors
+- Computed features for each window: mean, standard deviation & range for the six axes and 2 vector magnitudes
+
+#### To do next
+- Resample S006 from 100 Hz to 50Hz
+- Repeat preprocessing for the rest of the participants and create one dataframe
+- Decide training/text split
+- Sitting dummy baseline & simple learned baseline
