@@ -27,6 +27,8 @@ data/
 │   ├── S008.csv
 │   ├── ...
 │   └── S029.csv
+├── processed/
+│   └── harth_windows.csv
 └── README.md
 ```
 
@@ -44,9 +46,18 @@ One CSV file per participant, with one row per sensor reading.
 
 Activity codes: 1 walking, 2 running, 3 shuffling, 4 stairs (ascending), 5 stairs (descending), 6 standing, 7 sitting, 8 lying, 13 cycling (sit), 14 cycling (stand), 130 cycling (sit, inactive), 140 cycling (stand, inactive).
 
-## Known issues
-- S006 is sampled at 100 Hz; all other files are at 50 Hz.
-- S015 and S021 have an extra `index` column, and S023 has an extra `Unnamed: 0` column.
-- Small timestamp gaps occur in all files.
+## Processed data
+`data/processed/harth_windows.csv` is created by `notebooks/02_preprocessing.ipynb` and is not included in the repository. Run that notebook to recreate it.
+
+- One row per 1-second window (50 samples at 50 Hz): 118,386 windows from 22 participants.
+- 24 features: mean, standard deviation and range of each of the six axes and of each sensor's vector magnitude (`back_mag`, `thigh_mag`).
+- `activity`: one of 8 classes (walking, running, shuffling, stairs, standing, sitting, lying, cycling).
+- `subject`: participant ID, used for splitting the data by person.
+
+## Known issues and how they are handled
+- S006 is sampled at 100 Hz; all other files are at 50 Hz. S006 is resampled to 50 Hz by keeping every second row.
+- S015 and S021 have an extra `index` column, and S023 has an extra `Unnamed: 0` column. Only the needed columns are kept, so these are dropped.
+- Timestamp gaps occur in all files, mostly longer than 1 second. Recordings are split at every gap so no window crosses one.
+- 188 readings hit the ±8 g sensor limit, almost all during walking or running. They are kept as real high-impact movement.
 
 These are handled in the notebooks.

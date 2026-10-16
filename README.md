@@ -18,13 +18,17 @@ My background is in sport and exercise science, with a focus on biomechanics, an
 ```
 ├── data/
 │   ├── raw/            # HARTH CSV files (not tracked by Git)
+│   ├── processed/      # Windows table created by notebook 02 (not tracked by Git)
 │   └── README.md       # Download instructions, licence and citation
 ├── notebooks/          # Numbered notebooks, run in order
-├── src/                # Reusable Python functions
-├── reports/            # Proposal and report
-├── decision_log.md     # Project decisions and reasoning
-├── ai_use_log.md       # Record of AI assistance
-├── requirements.txt    # Package versions
+│   ├── 01_data_inspection.ipynb      
+│   └── 02_preprocessing.ipynb      
+├── src/                 # Reusable Python functions
+│   └── preprocessing.py # Cleaning, windowing and feature functions
+├── reports/             # Proposal and report
+├── decision_log.md      # Project decisions and reasoning
+├── ai_use_log.md        # Record of AI assistance
+├── requirements.txt     # Package versions
 └── README.md
 ```
 
@@ -55,7 +59,8 @@ Created and tested on Windows 11 with Python 3.13.15.
 1. Activate the environment (step 2 above) from the main project folder.
 2. Start Jupyter: `jupyter lab`
 3. Open the `notebooks` folder and run the notebooks in number order:
-   - `01_data_inspection.ipynb`: data audit 
+   - `01_data_inspection.ipynb`: data audit (does not change the data)
+   - `02_preprocessing.ipynb`: cleans the data and creates `data/processed/harth_windows.csv`. This must be run before any later notebooks, because the processed file is not included in the repository.
 
 ## Results
 To be added.

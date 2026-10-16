@@ -65,3 +65,5 @@
 ### 16-10-2026: Continued data preprocessing on all participants
 #### Notes
 - In the clean_participant() function, I resampled participant from 100Hz to 50 Hz by keeping every second row since this is the simplest method of downsampling. 
+- Final dataset has 118,386 windows from 22 participants.
+- Dropping mixed windows removed more of the short, transitional activities like shuffling, stairs compared to the others.

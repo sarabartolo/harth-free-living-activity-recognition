@@ -2,3 +2,4 @@
 - 25-09-2026: Used Claude to help make a plan for project set up by creating a step by step checklist, and to explain how to use Git, Github, and virtual environments.
 - 02-10-2026: Used Claude to give feedback on my draft proposal (including suggested edits to cut the word count) and to draft the README and data/README.md, which I then checked and edited.
 - 10-20-2026: Used Claude to create a to do list to reach Milestone 2, explain concepts and suggest code when I got stuck (mostly for gap splitting & creating windows), and to check my work. I wrote, adapted and checked the code myself.
+- 16-10-2026: Used Claude to create a step-by-step checklist to complete the preprocessing. It checked my functions and explain errors, drafted the notebook 02 introduction, the README and data/README.md updates, which I checked and edited. 
