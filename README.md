@@ -21,8 +21,9 @@ My background is in sport and exercise science, with a focus on biomechanics, an
 │   ├── processed/      # Windows table created by notebook 02 (not tracked by Git)
 │   └── README.md       # Download instructions, licence and citation
 ├── notebooks/          # Numbered notebooks, run in order
-│   ├── 01_data_inspection.ipynb      
-│   └── 02_preprocessing.ipynb      
+│   ├── 01_data_inspection.ipynb  
+│   ├── 02_preprocessing.ipynb      
+│   └── 03_baseline.ipynp     
 ├── src/                 # Reusable Python functions
 │   └── preprocessing.py # Cleaning, windowing and feature functions
 ├── reports/             # Proposal and report
@@ -63,7 +64,14 @@ Created and tested on Windows 11 with Python 3.13.15.
    - `02_preprocessing.ipynb`: cleans the data and creates `data/processed/harth_windows.csv`. This must be run before any later notebooks, because the processed file is not included in the repository.
 
 ## Results
-To be added.
+##### 5-fold cross-validation, mean ± SD
+| Model | Macro F1 | Balanced accuracy |
+|---|---|---|
+| Dummy (most frequent) | 0.081 ± 0.007 | 0.125 ± 0.000 |
+| Logistic regression | 0.809 ± 0.039 | 0.802 ± 0.036 |
+
+- Logistic regression recognises sitting, lying, running, standing, walking and cycling well (0.89 to 1.00 recall).
+- Weak classes: shuffling (0.38), mostly confused with standing and walking, and stairs (0.35), mostly confused with walking.
 
 ## Limitations
 - 22 healthy adults aged 25-68, so the model may not generalise to children, adults over 68, or people whose movement differs because of a health condition or impairment.

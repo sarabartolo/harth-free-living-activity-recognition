@@ -62,8 +62,33 @@
 - Decide training/text split
 - Sitting dummy baseline & simple learned baseline
 
-### 16-10-2026: Continued data preprocessing on all participants
+## 16-10-2026: Finished data preprocessing on all participants
 #### Notes
 - In the clean_participant() function, I resampled participant from 100Hz to 50 Hz by keeping every second row since this is the simplest method of downsampling. 
 - Final dataset has 118,386 windows from 22 participants.
 - Dropping mixed windows removed more of the short, transitional activities like shuffling, stairs compared to the others.
+
+## 16-10-2026: Baseline Models
+- Train/test split by participant: 18 training, 4 test (S018, S019, S022, S025), so the model is tested on people it hasn't seen. The test set is 22,308 windows (19%).
+- Test participants were chosen manually from a crosstab of windows per activity, before any modelling, so that:
+  - all 8 activities appear in both the training and test sets
+  - the main contributors to running (S027) and cycling (S009, S026) stay in training
+  - both recording groups are represented in the test set (S025 is from the S023 to S029 group)
+- A random split wasn't used because several activities come mainly from one or two participants, so a random choice of four could leave an activity missing or barely represented in one set.
+- Limitation: much of the test set's cycling comes from S025, so the test result for cycling mostly reflects one person.
+- After the split, the test participants are set aside and are not used for any decision. The test set will be used once, at the end, after the final model is chosen.
+- Cross-validation: 5-fold StratifiedGroupKFold on the 18 training participants. Grouping keeps each participant in one fold; stratification keeps the activity mix similar across folds, so no validation fold is missing a rare activity. 5 gives 3 to 4 participants per fold.
+
+#### Decisions: baselines and metrics
+- Two baselines: a dummy model that always predicts the most common class (sitting), and logistic regression as a simple learned baseline.
+- Logistic regression is in a pipeline with StandardScaler, so the scaler is fitted on the training participants of each fold only.
+- Main metric: macro F1 (every activity weighted equally despite the imbalance). Secondary metric: balanced accuracy (macro-averaged recall), which is easier to interpret than F1 and not inflated by the large sitting class like plain accuracy would be.
+
+#### Results (5-fold cross-validation, mean ± SD)
+| Model | Macro F1 | Balanced accuracy |
+|---|---|---|
+| Dummy (most frequent) | 0.081 ± 0.007 | 0.125 ± 0.000 |
+| Logistic regression | 0.809 ± 0.039 | 0.802 ± 0.036 |
+
+- Logistic regression recognises sitting, lying, running, standing, walking and cycling well (0.89 to 1.00 recall).
+- Weak classes: shuffling (0.38), mostly confused with standing and walking, and stairs (0.35), mostly confused with walking. These movements look similar to walking or standing in 1-second summary features, and they also lost the most windows when mixed windows were dropped.
