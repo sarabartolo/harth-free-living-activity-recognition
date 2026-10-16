@@ -62,16 +62,16 @@ Created and tested on Windows 11 with Python 3.13.15.
 3. Open the `notebooks` folder and run the notebooks in number order:
    - `01_data_inspection.ipynb`: data audit (does not change the data)
    - `02_preprocessing.ipynb`: cleans the data and creates `data/processed/harth_windows.csv`. This must be run before any later notebooks, because the processed file is not included in the repository.
+   - `03_baseline.ipynp`: splits participants into training (18) and test (4) sets, sets up 5-fold grouped cross-validation, and evaluates a dummy baseline and logistic regression. Requires `data/processed/harth_windows.csv` from notebook 02.
 
 ## Results
-##### 5-fold cross-validation, mean ± SD
+Baseline results from 5-fold cross-validation on the 18 training participants (mean ± SD across folds):
 | Model | Macro F1 | Balanced accuracy |
 |---|---|---|
 | Dummy (most frequent) | 0.081 ± 0.007 | 0.125 ± 0.000 |
 | Logistic regression | 0.809 ± 0.039 | 0.802 ± 0.036 |
 
-- Logistic regression recognises sitting, lying, running, standing, walking and cycling well (0.89 to 1.00 recall).
-- Weak classes: shuffling (0.38), mostly confused with standing and walking, and stairs (0.35), mostly confused with walking.
+Logistic regression recognises most activities well, but struggles with shuffling and stairs, which are often confused with standing and walking.
 
 ## Limitations
 - 22 healthy adults aged 25-68, so the model may not generalise to children, adults over 68, or people whose movement differs because of a health condition or impairment.
