@@ -61,3 +61,7 @@
 - Repeat preprocessing for the rest of the participants and create one dataframe
 - Decide training/text split
 - Sitting dummy baseline & simple learned baseline
+
+### 16-10-2026: Continued data preprocessing on all participants
+#### Notes
+- In the clean_participant() function, I resampled participant from 100Hz to 50 Hz by keeping every second row since this is the simplest method of downsampling. 
