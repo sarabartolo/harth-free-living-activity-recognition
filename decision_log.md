@@ -92,3 +92,38 @@
 
 - Logistic regression recognises sitting, lying, running, standing, walking and cycling well (0.89 to 1.00 recall).
 - Weak classes: shuffling (0.38), mostly confused with standing and walking, and stairs (0.35), mostly confused with walking. These movements look similar to walking or standing in 1-second summary features, and they also lost the most windows when mixed windows were dropped.
+
+## 08-11-2026: Models
+
+#### Decisions: model choice
+- Models: k-NN and decision tree, then random forest and gradient boosting, compared against the dummy and logistic regression baselines. Ordered from simple to complex.
+- All models use the same training participants, the same 5 grouped folds and the same metrics. Tuning uses GridSearchCV with macro F1 to pick the best setting. The tuned model is then scored with cross_validate on the same folds.
+- Limitation: the best setting is chosen and scored on the same folds, so its score is slightly optimistic. Nested cross-validation could have avoided this but has higher computation need and would have taken too long to run on my machine.
+- Training and prediction time are recorded for each model.
+
+#### k-NN
+- Grid: k 5, 15, 25, 45, 65; weights uniform/distance; p 1/2 (Manhattan/Manhattan). 
+- Best: k = 15, uniform, Manhattan (p = 1). Macro F1 0.808 ± 0.030.
+- Manhattan better than Euclidean at every k and more stable.
+- Weighting made almost no difference bu uniform weighting was kept.
+- Some more details in notebook
+
+#### Decision tree
+- Grid: max_depth 5, 10, 15, 20, 30, None; min_samples_leaf 1, 10, 50, 100, 200; criterion gini/entropy. random_state = 42.
+- Best: gini, depth 10, leaf 50. Macro F1 0.776 ± 0.037.
+- Overfitting with no limits (training 1.000, validation 0.737); depth 5 underfits.
+- Top splits use thigh orientation, back orientation and thigh movement variability, which supports the choice of mean and SD features.
+- Some more details in notebook
+
+#### Results so far (5-fold CV, mean ± SD)
+| Model | Macro F1 | Balanced accuracy | Training time (s) | Prediction time (s) |
+|---|---|---|---|---|
+| Dummy | 0.081 ± 0.007 | 0.125 ± 0.000 | 0.05 | 0.09 |
+| Logistic regression | 0.809 ± 0.039 | 0.802 ± 0.036 | 3.82 | 0.14 |
+| k-NN | 0.808 ± 0.030 | 0.799 ± 0.047 | 0.18 | 12.56 |
+| Decision tree | 0.776 ± 0.037 | 0.775 ± 0.049 | 2.59 | 0.14 |
+
+#### To do
+- Random forest: out-of-bag score will not be used, because the windows a tree doesn't sample still come from the same participants, so it would be optimistic.
+- Gradient boosting
+- Consider PCA (refer to week 8 notes)
