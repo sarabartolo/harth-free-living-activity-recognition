@@ -73,12 +73,12 @@ Results from 5-fold cross-validation on the 18 training participants (mean ± SD
 |---|---|---|---|---|
 | Dummy (most frequent class) | 0.081 ± 0.007 | 0.125 ± 0.000 | 0.07 | 0.10 |
 | Logistic regression | 0.809 ± 0.039 | 0.802 ± 0.036 | 4.18 | 0.14 |
-| k-NN (k = 15, Manhattan) | 0.808 ± 0.030 | 0.799 ± 0.047 | 0.18 | 12.12 |
+| kNN | 0.808 ± 0.030 | 0.799 ± 0.047 | 0.18 | 12.12 |
 | Decision tree | 0.776 ± 0.037 | 0.775 ± 0.049 | 2.90 | 0.16 |
 | Random forest | 0.832 ± 0.009 | 0.835 ± 0.025 | 19.04 | 0.26 |
 | Gradient boosting | 0.814 ± 0.023 | 0.823 ± 0.022 | 26.99 | 1.57 |
 
-Times are per fold, in seconds (measured on a laptop).
+Times are per fold, in seconds (measured on my laptop).
 
 The random forest had the highest and most consistent macro F1. All models struggled with shuffling and stairs (F1 around 0.45 to 0.5 for most models), which are often confused with standing and walking.
 
