@@ -30,7 +30,7 @@
 - Windows: non-overlapping 1-second windows (50 samples at 50 Hz), following Logacjov et al. (2021). This gives about 126,000 windows.
 - Features: mean, standard deviation and range of each axis and of each sensor's vector magnitude, √(x²+y²+z²). Vector magnitude captures overall movement intensity regardless of sensor orientation.
 - Baseline: always predict the most common class (sitting).
-- Candidate models: decision tree (interpretable), k-NN (similarity to training windows), SVM (suited to many features).
+- Candidate models: decision tree (interpretable), kNN (similarity to training windows), SVM (suited to many features).
 - Evaluation design: hold out a few subjects as a test set, chosen so every class is present, and use it only once at the end. Tune with cross-validation grouped by subject on the rest.
 - Metrics: F1 score as the main metric because it weights every activity equally despite the imbalance. Confusion matrix to show which activities get confused.
 - Leakage prevention: split by subject; fit scaling on training data only; don't use timestamp or index columns as features.
@@ -96,12 +96,12 @@
 ## 08-11-2026: Models
 
 #### Decisions: model choice
-- Models: k-NN and decision tree, then random forest and gradient boosting, compared against the dummy and logistic regression baselines. Ordered from simple to complex.
+- Models: kNN and decision tree, then random forest and gradient boosting, compared against the dummy and logistic regression baselines. Ordered from simple to complex.
 - All models use the same training participants, the same 5 grouped folds and the same metrics. Tuning uses GridSearchCV with macro F1 to pick the best setting. The tuned model is then scored with cross_validate on the same folds.
 - Limitation: the best setting is chosen and scored on the same folds, so its score is slightly optimistic. Nested cross-validation could have avoided this but has higher computation need and would have taken too long to run on my machine.
 - Training and prediction time are recorded for each model.
 
-#### k-NN
+#### kNN
 - Grid: k 5, 15, 25, 45, 65; weights uniform/distance; p 1/2 (Manhattan/Manhattan). 
 - Best: k = 15, uniform, Manhattan (p = 1). Macro F1 0.808 ± 0.030.
 - Manhattan better than Euclidean at every k and more stable.
@@ -120,10 +120,41 @@
 |---|---|---|---|---|
 | Dummy | 0.081 ± 0.007 | 0.125 ± 0.000 | 0.05 | 0.09 |
 | Logistic regression | 0.809 ± 0.039 | 0.802 ± 0.036 | 3.82 | 0.14 |
-| k-NN | 0.808 ± 0.030 | 0.799 ± 0.047 | 0.18 | 12.56 |
+| kNN | 0.808 ± 0.030 | 0.799 ± 0.047 | 0.18 | 12.56 |
 | Decision tree | 0.776 ± 0.037 | 0.775 ± 0.049 | 2.59 | 0.14 |
 
 #### To do
 - Random forest: out-of-bag score will not be used, because the windows a tree doesn't sample still come from the same participants, so it would be optimistic.
 - Gradient boosting
 - Consider PCA (refer to week 8 notes)
+
+## 10/11-11-2026: Models cont.
+
+#### Random forest
+- 200 trees. Grid: max_depth 10, 20, None × min_samples_leaf 1, 10, 50, kept small because each fit trains 200 trees - high compuation
+- Best: no depth limit, leaf 1. Macro F1 0.832 ± 0.009. The forest is best with larger trees, because averaging cancels out each tree's overfitting (unlike decision tree single tree).
+- Out-of-bag score not used
+
+#### Gradient boosting
+- HistGradientBoostingClassifier, early_stopping=False (default early stopping uses a random, ungrouped 10% of windows).
+- First search best: learning_rate 0.05, 15 leaves (0.812). High learning rates were unstable.
+- The best setting was at the edge of the grid, so a second search tried 0.02, 600 rounds and 5 leaves. Best: 0.02, 600 rounds, 15 leaves (0.814 ± 0.023). Very little gain, so stopped there.
+- Kept both searches; used the second search's best model
+
+#### Final cross-validation results (mean ± SD)
+| Model | Macro F1 | Balanced accuracy | Training time (s) | Prediction time (s) |
+|---|---|---|---|---|
+| Dummy | 0.081 ± 0.007 | 0.125 ± 0.000 | 0.07 | 0.10 |
+| Logistic regression | 0.809 ± 0.039 | 0.802 ± 0.036 | 4.18 | 0.14 |
+| kNN | 0.808 ± 0.030 | 0.799 ± 0.047 | 0.18 | 12.12 |
+| Decision tree | 0.776 ± 0.037 | 0.775 ± 0.049 | 2.90 | 0.16 |
+| Random forest | 0.832 ± 0.009 | 0.835 ± 0.025 | 19.04 | 0.26 |
+| Gradient boosting | 0.814 ± 0.023 | 0.823 ± 0.022 | 26.99 | 1.57 |
+
+#### Conclusions so far
+- Best model: random forest (highest and most consistent macro F1; better than logistic regression in 4 of 5 folds).
+- Shuffling and stairs F1 stay around 0.45 to 0.5 for every model, so the limit is likely the features, not the models.
+- Nested CV not used because of computation time; will note as a limitation.
+
+#### To do next
+- PCA, feature importance and the final test.
