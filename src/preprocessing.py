@@ -104,7 +104,11 @@ def create_windows(data):
     one_activity_per_window = activities_per_window[activities_per_window == 1].index
     data = data[data["window_n"].isin(one_activity_per_window)]
 
-    return data
+    # Count full windows and windows containing more than one activity (for report)
+    n_full_windows = len(activities_per_window)
+    n_mixed_windows = (activities_per_window > 1).sum()
+
+    return data, n_full_windows, n_mixed_windows
 
     
 def create_features(data): 
