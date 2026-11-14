@@ -170,6 +170,23 @@
 - Findings: most activities separate along intensity and posture. Stairs overlaps moderate walking; shuffling lies between standing and walking along PC1.
 - Decision: not used to reduce model inputs, because it ranks directions by variance, not by how well they separate activities, and the tree-based models don't need it. Features for vertical movement or step frequency required 
 
+#### MLP
+- Added to test whether a model that learns its own combinations of features improves on the tree ensembles, especially for stairs and shuffling.
+- One hidden layer, ReLU, Adam, cross-entropy loss, StandardScaler in the pipeline. Early stopping off during tuning (scikit-learn holds out random windows from the training participants); training stopped when the training loss stopped improving, max 300 epochs.
+- First search: (32), (64), (64, 32) × alpha 0.0001, 0.001, 0.01. Best 32 neurons, alpha 0.01 (0.836), both at the edge of the grid.
+- Second search: (8), (16), (32) × alpha 0.01, 0.1, 1. Best 16 neurons, alpha 0.01 (0.841 ± 0.022), inside the tested ranges. Smaller, regularised networks did best; alpha 1 underfitted.
+- Learning curve recorded with built-in early stopping, used only to check convergence (its validation set is random windows, not whole participants). Converged after about 70 epochs, no overfitting. A stricter version using grouped folds (partial_fit) was considered but not used, to keep the code simple.
+- Seeds 10, 15, 252: 0.831, 0.829, 0.821 (mean 0.827 ± 0.005). Tuned score was at the upper end of seed variation.
+- Best stairs F1 of any model (0.567); no improvement on shuffling (0.477).
+
+#### Feature importance
+- Random forest impurity importance: mean orientation features dominate (thigh_z_mean, thigh_x_mean, back_x_mean about 42% of the total), then thigh movement features. Matches the decision tree's top splits.
+- Posture matters most for the model, even though PCA shows movement intensity holds most of the variance.
+
+#### Final model decision
+- Final model: random forest (200 trees, no depth limit, min_samples_leaf 1), macro F1 0.832 ± 0.009.
+- Reason: the MLP's advantage disappears once seed variation is considered, and the forest is the most consistent model across folds, simpler and faster to train.
+- The MLP (16 neurons, alpha 0.01, random_state 42) will also be evaluated on the test set as a comparison only, because it was best on stairs. The final choice will not change based on the test results.
+
 #### To do next
-- Include a precision-recall curve for stairs and shuffling in report
-- Add Neural network (MLP) before final test
+- Include a precision-recall curve for stairs and shuffling in report (if space allows)
