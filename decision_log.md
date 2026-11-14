@@ -141,7 +141,7 @@
 - The best setting was at the edge of the grid, so a second search tried 0.02, 600 rounds and 5 leaves. Best: 0.02, 600 rounds, 15 leaves (0.814 ± 0.023). Very little gain, so stopped there.
 - Kept both searches; used the second search's best model
 
-#### Final cross-validation results (mean ± SD)
+####  cross-validation results (mean ± SD)
 | Model | Macro F1 | Balanced accuracy | Training time (s) | Prediction time (s) |
 |---|---|---|---|---|
 | Dummy | 0.081 ± 0.007 | 0.125 ± 0.000 | 0.07 | 0.10 |
@@ -158,3 +158,18 @@
 
 #### To do next
 - PCA, feature importance and the final test.
+
+## 14-11-2026
+
+#### PCA (exploratory)
+- PCA used for exploration only to check whether the activities the models confused overlap in feature space. Did not used in the models.
+- Fitted on the 18 training participants using standardised features (scaler and PCA in a pipeline).
+- Explained variance: PC1 70.2%, PC1 + PC2 76.5%, 5 components 90.2%, 7 components 95.2%.
+- Loadings: PC1 = movement intensity (all SD and range features about 0.23); PC2 =  orientation/posture (means).
+- Plots: 5,000-window random sample for the overall plot; 1,000 windows of each activity for the pair plots, so the small classes are visible (random_state = 42).
+- Findings: most activities separate along intensity and posture. Stairs overlaps moderate walking; shuffling lies between standing and walking along PC1.
+- Decision: not used to reduce model inputs, because it ranks directions by variance, not by how well they separate activities, and the tree-based models don't need it. Features for vertical movement or step frequency required 
+
+#### To do next
+- Include a precision-recall curve for stairs and shuffling in report
+- Add Neural network (MLP) before final test
