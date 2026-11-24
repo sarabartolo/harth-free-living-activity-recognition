@@ -188,5 +188,12 @@
 - Reason: the MLP's advantage disappears once seed variation is considered, and the forest is the most consistent model across folds, simpler and faster to train.
 - The MLP (16 neurons, alpha 0.01, random_state 42) will also be evaluated on the test set as a comparison only, because it was best on stairs. The final choice will not change based on the test results.
 
-#### To do next
-- Include a precision-recall curve for stairs and shuffling in report (if space allows)
+## 24-11-2026
+#### Final Test Evaluation
+- Forest test macro F1 0.839 (CV 0.832±0.009); MLP 0.811 (CV 0.825±0.006)
+- Per-person check: both models were not very consistent between participants
+- The MLP's drop is mainly S025 (the MLP called 22% of cycling stairs)
+- F1 score for stairs improved in both models from around 0.5 to around 0.65
+- Per-person random forest F1 ranged from 0.76–0.91
+- Per-person MLP ranged from 0.75-0.93
+
