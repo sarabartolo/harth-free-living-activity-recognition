@@ -70,6 +70,7 @@ Created and tested on Windows 11 with Python 3.13.15.
    - `04_model_comparison.ipynb`: tunes and compares kNN, a decision tree, a random forest, gradient boosting and an MLP against the baselines, using the same grouped 5-fold cross-validation, and repeats the MLP with three extra seeds. Requires `data/processed/harth_windows.csv`.
    - `05_pca.ipynb`: exploratory PCA of the window features. Can be run on its own after notebook 02.
    - `06_test_evaluation.ipynb`: fits the final random forest and the MLP (for comparison) on all 18 training participants, and evaluates them once on the 4 test participants, with confusion matrices and per-participant scores. Requires `data/processed/harth_windows.csv`.
+   - Running all notebooks in order takes about 2 hours on a laptop (`04_model_comparison.ipynb` takes around 1 hour 45 minutes).
 
 ## Results
 Results from 5-fold cross-validation on the 18 training participants (mean ± SD):
